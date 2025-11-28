@@ -5,16 +5,11 @@ class Project(models.Model):
     _inherit = "project.project"
 
     @staticmethod
-    def _read_group_status_ids(values, domain, order, *args, **kwargs):
-        env = values.env if hasattr(values, "env") else values._env
-        if not isinstance(domain, list):
-            domain = []
-        if not isinstance(order, list):
-            order = ""
+    def _read_group_status_ids(self, groups, domain):
         status_ids = (
-            env["project.status"].with_user(SUPERUSER_ID)._search(domain, order=order)
+            self.env["project.status"].with_user(SUPERUSER_ID)._search([])
         )
-        return env["project.status"].browse(status_ids)
+        return self.env["project.status"].browse(status_ids)
 
     project_status = fields.Many2one(
         comodel_name="project.status",
